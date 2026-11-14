@@ -1,0 +1,22 @@
+{
+  "name": "shopsmart-backend",
+  "version": "1.0.0",
+  "description": "ShopSmart REST API: Express, MongoDB and an AI shopping assistant",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js"
+  },
+  "author": "Abhishek Kumar Mishra",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.12.1",
+    "openai": "^7.57.0"
+  }
+}
