@@ -14,30 +14,40 @@ const seedProducts = async () => {
   console.log(`Inserted ${products.length} products`);
 };
 
-const seedAdmin = async () => {
-  const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
-  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-    console.log('ADMIN_EMAIL / ADMIN_PASSWORD not set in .env, skipping admin');
+// Creates the account, or updates its password and role if it already exists,
+// so the values in .env are always the ones that work.
+// Admins can't sign up through the API, so the seed is the only way to make one.
+const seedUser = async ({ name, email, password, role }) => {
+  if (!email || !password) {
+    console.log(`No ${role} account in .env, skipping`);
     return;
   }
 
-  // Admins can't sign up through the API, so the seed is the only way to make one
-  let admin = await User.findOne({ email: ADMIN_EMAIL.toLowerCase() });
-  if (admin) {
-    admin.role = 'admin';
+  let user = await User.findOne({ email: email.toLowerCase() });
+  if (user) {
+    user.password = password;
+    user.role = role;
   } else {
-    admin = new User({
-      name: ADMIN_NAME || 'Admin',
-      email: ADMIN_EMAIL,
-      password: ADMIN_PASSWORD,
-      role: 'admin',
-    });
+    user = new User({ name, email, password, role });
   }
-  await admin.save(); // save() runs the pre-save hook, so the password gets hashed
-  console.log(`Admin ready: ${admin.email}`);
+  await user.save(); // save() runs the pre-save hook, so the password gets hashed
+  console.log(`${role === 'admin' ? 'Admin' : 'Customer'} ready: ${user.email}`);
 };
+
+const env = process.env;
 
 await connectDB();
 await seedProducts();
-await seedAdmin();
+await seedUser({
+  name: env.ADMIN_NAME || 'Admin',
+  email: env.ADMIN_EMAIL,
+  password: env.ADMIN_PASSWORD,
+  role: 'admin',
+});
+await seedUser({
+  name: env.CUSTOMER_NAME || 'Demo Customer',
+  email: env.CUSTOMER_EMAIL,
+  password: env.CUSTOMER_PASSWORD,
+  role: 'user',
+});
 await mongoose.disconnect();
