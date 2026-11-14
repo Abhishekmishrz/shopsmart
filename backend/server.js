@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+import { notFound, errorHandler } from './middleware/error.js';
 
 const app = express();
 
@@ -14,7 +16,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-const PORT = process.env.PORT || 5000;
+// Routes
+app.use('/api/auth', authRoutes);
+
+// These two must come after all routes
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5050;
 
 // Connect to the database first, then start accepting requests
 connectDB().then(() => {
