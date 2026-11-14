@@ -1,0 +1,36 @@
+[
+  { "name": "Trail Runner Running Shoes", "brand": "Stride", "category": "Footwear", "price": 1899, "stock": 24, "description": "Lightweight running shoes with a grippy outsole for trails and city roads. Breathable mesh upper and cushioned midsole." },
+  { "name": "Court Classic Sneakers", "brand": "Stride", "category": "Footwear", "price": 1499, "stock": 31, "description": "Clean white low-top sneakers with a padded collar. Goes with jeans, chinos and shorts." },
+  { "name": "Everyday Walking Shoes", "brand": "Stride", "category": "Footwear", "price": 1299, "stock": 18, "description": "Soft, flexible walking shoes for long days on your feet. Memory foam insole." },
+  { "name": "Hiking Boots, Waterproof", "brand": "Summit", "category": "Footwear", "price": 3499, "stock": 7, "description": "Mid-ankle hiking boots with a waterproof lining and rugged lugged sole for wet, rocky trails." },
+  { "name": "Slip-on Sliders", "brand": "Easy", "category": "Footwear", "price": 499, "stock": 60, "description": "Comfortable rubber sliders for home, gym and beach. Quick-dry and easy to clean." },
+  { "name": "Road Pro Running Shoes", "brand": "Pulse", "category": "Footwear", "price": 2799, "stock": 12, "description": "Responsive running shoes built for speed on tarmac, with a carbon-fibre plate for long runs." },
+
+  { "name": "Everyday Cotton Tee (Pack of 2)", "brand": "Basics Co", "category": "Clothing", "price": 799, "stock": 40, "description": "Two soft crew-neck t-shirts in 100% cotton. Pre-shrunk, in black and white." },
+  { "name": "Classic Denim Jacket", "brand": "Indigo", "category": "Clothing", "price": 2299, "stock": 2, "description": "Mid-wash denim jacket with button front and chest pockets. A layer for every season." },
+  { "name": "Slim Fit Chinos", "brand": "Indigo", "category": "Clothing", "price": 1399, "stock": 22, "description": "Stretch cotton chinos with a slim, tapered fit. Smart enough for the office." },
+  { "name": "Running Shorts, Quick Dry", "brand": "Pulse", "category": "Clothing", "price": 599, "stock": 35, "description": "Light running shorts with a built-in liner and zip pocket for keys." },
+  { "name": "Hooded Sweatshirt", "brand": "Basics Co", "category": "Clothing", "price": 1199, "stock": 15, "description": "Brushed fleece hoodie with a kangaroo pocket. Warm without being heavy." },
+  { "name": "Linen Casual Shirt", "brand": "Coast", "category": "Clothing", "price": 1499, "stock": 10, "description": "Breathable linen-blend shirt for hot days. Relaxed fit, button-down collar." },
+  { "name": "Rain Jacket, Packable", "brand": "Summit", "category": "Clothing", "price": 1999, "stock": 8, "description": "Waterproof shell that folds into its own pocket. Ideal for monsoon commutes." },
+  { "name": "Ankle Socks (Pack of 5)", "brand": "Basics Co", "category": "Clothing", "price": 349, "stock": 80, "description": "Cushioned cotton-blend ankle socks for sports and daily wear." },
+
+  { "name": "Wireless Earbuds Pro", "brand": "Sonik", "category": "Electronics", "price": 2499, "stock": 3, "description": "True wireless earbuds with active noise cancellation and 30 hours of battery with the case." },
+  { "name": "Smart Fitness Band", "brand": "Pulse", "category": "Electronics", "price": 1999, "stock": 9, "description": "Tracks steps, heart rate and sleep. 14-day battery and water resistant to 50 m." },
+  { "name": "Bluetooth Speaker, Mini", "brand": "Sonik", "category": "Electronics", "price": 1299, "stock": 20, "description": "Pocket-size speaker with surprisingly big sound and 12 hours of playback." },
+  { "name": "Power Bank 20000 mAh", "brand": "Volt", "category": "Electronics", "price": 1499, "stock": 25, "description": "Charges a phone up to four times. Fast charging over USB-C." },
+  { "name": "Over-Ear Headphones", "brand": "Sonik", "category": "Electronics", "price": 3299, "stock": 6, "description": "Foldable wireless headphones with deep bass and soft memory-foam cushions." },
+  { "name": "USB-C Fast Charger 33W", "brand": "Volt", "category": "Electronics", "price": 799, "stock": 45, "description": "Compact wall charger that fast-charges phones and earbuds." },
+  { "name": "Wireless Mouse", "brand": "Clix", "category": "Electronics", "price": 699, "stock": 30, "description": "Silent-click wireless mouse with an adjustable DPI and long battery life." },
+
+  { "name": "Steel Water Bottle, 1 L", "brand": "Hydra", "category": "Home", "price": 549, "stock": 58, "description": "Double-wall insulated bottle that keeps water cold for 24 hours and hot for 12." },
+  { "name": "Ceramic Coffee Mug Set", "brand": "Hearth", "category": "Home", "price": 899, "stock": 14, "description": "Set of four 350 ml stoneware mugs in muted colours. Microwave and dishwasher safe." },
+  { "name": "Desk Lamp, LED", "brand": "Lumo", "category": "Home", "price": 1299, "stock": 11, "description": "Adjustable LED lamp with three colour temperatures and a USB charging port." },
+  { "name": "Cotton Bedsheet, Double", "brand": "Hearth", "category": "Home", "price": 1099, "stock": 16, "description": "Soft 200-thread-count cotton bedsheet with two pillow covers." },
+  { "name": "Lunch Box, Insulated", "brand": "Hydra", "category": "Home", "price": 649, "stock": 27, "description": "Three-container steel lunch box in an insulated bag. Keeps food warm till lunch." },
+
+  { "name": "Canvas Backpack, 25 L", "brand": "Packd", "category": "Accessories", "price": 1299, "stock": 17, "description": "Water-resistant canvas backpack with a padded 15-inch laptop sleeve." },
+  { "name": "Leather Wallet", "brand": "Packd", "category": "Accessories", "price": 799, "stock": 21, "description": "Slim bi-fold wallet in genuine leather with RFID protection." },
+  { "name": "Polarised Sunglasses", "brand": "Coast", "category": "Accessories", "price": 1199, "stock": 13, "description": "UV400 polarised sunglasses with a lightweight frame." },
+  { "name": "Analog Wrist Watch", "brand": "Tempo", "category": "Accessories", "price": 2499, "stock": 5, "description": "Minimal analog watch with a stainless steel case and leather strap." }
+]
