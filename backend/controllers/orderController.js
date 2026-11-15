@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Order, { ORDER_STATUSES } from '../models/Order.js';
 import Product from '../models/Product.js';
+import { escapeRegex } from '../utils/escapeRegex.js';
 
 // Which status an order may move to from its current status
 const NEXT_STATUS = {
@@ -135,25 +136,48 @@ export const cancelMyOrder = async (req, res) => {
   res.json({ order: updated });
 };
 
-// GET /api/orders?status=Placed&page=1&limit=20 (admin)
+// GET /api/orders?status=Placed&search=rahul&page=1&limit=20 (admin)
+// Also returns counts per status for the tabs: { All: 90, Placed: 12, ... }
 export const getAllOrders = async (req, res) => {
-  const { status } = req.query;
+  const { status, search } = req.query;
   const filter = {};
   if (ORDER_STATUSES.includes(status)) filter.status = status;
+
+  // Search by customer name, city, or order number ("#SS-5C2786" = the last 6 characters of the id)
+  if (typeof search === 'string' && search.trim()) {
+    const text = search.trim();
+    const pattern = new RegExp(escapeRegex(text), 'i');
+    const conditions = [{ 'shippingAddress.fullName': pattern }, { 'shippingAddress.city': pattern }];
+
+    const orderNo = text.replace(/^#?SS-/i, '');
+    if (/^[0-9a-f]{1,24}$/i.test(orderNo)) {
+      // The id is an ObjectId, not text, so convert it to a string before matching its end
+      conditions.push({ $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: `${orderNo}$`, options: 'i' } } });
+    }
+    filter.$or = conditions;
+  }
 
   const page = Math.max(Number(req.query.page) || 1, 1);
   const limit = Math.min(Math.max(Number(req.query.limit) || 20, 1), 50);
 
-  const [orders, total] = await Promise.all([
+  const [orders, total, statusCounts] = await Promise.all([
     Order.find(filter)
       .populate('user', 'name email') // like a SQL JOIN: swap the user id for name and email
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit),
     Order.countDocuments(filter),
+    // Like SQL: SELECT status, COUNT(*) FROM orders GROUP BY status
+    Order.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
   ]);
 
-  res.json({ orders, page, pages: Math.ceil(total / limit), total });
+  const counts = { All: 0 };
+  for (const name of ORDER_STATUSES) {
+    counts[name] = statusCounts.find((c) => c._id === name)?.count || 0;
+    counts.All += counts[name];
+  }
+
+  res.json({ orders, page, pages: Math.ceil(total / limit), total, counts });
 };
 
 // PUT /api/orders/:id/status (admin)

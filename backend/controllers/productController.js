@@ -1,4 +1,5 @@
 import Product, { CATEGORIES } from '../models/Product.js';
+import { escapeRegex } from '../utils/escapeRegex.js';
 
 // Sort options the client may ask for. Anything else falls back to newest.
 const SORTS = {
@@ -8,12 +9,10 @@ const SORTS = {
   name: { name: 1 },
 };
 
-// Turns user text into a safe regex: "shoes (red)" must not break the pattern
-const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
 // GET /api/products?search=shoe&category=Footwear,Clothing&minPrice=500&maxPrice=2000&inStock=true&sort=price_asc&page=1&limit=12
+// Admin table also uses &stock=low (3 or fewer left) or &stock=out (none left)
 export const getProducts = async (req, res) => {
-  const { search, category, minPrice, maxPrice, inStock, sort } = req.query;
+  const { search, category, minPrice, maxPrice, inStock, stock, sort } = req.query;
   const filter = {};
 
   // Search name, brand and description, ignoring upper/lower case
@@ -28,6 +27,8 @@ export const getProducts = async (req, res) => {
   }
 
   if (inStock === 'true') filter.stock = { $gt: 0 };
+  if (stock === 'low') filter.stock = { $lte: 3 };
+  if (stock === 'out') filter.stock = 0;
 
   // Build { price: { $gte: 500, $lte: 2000 } } from whichever limits were sent
   const min = Number(minPrice);
