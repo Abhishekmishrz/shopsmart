@@ -96,7 +96,9 @@ export const chat = async (req, res) => {
         for (const p of result.products || []) found.set(p.id, p);
         if (result.product) found.set(result.product.id, result.product);
         for (const o of result.orders || []) orders.set(o.orderNumber, o);
-        messages.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) });
+        // The cards need image links, the model doesn't: leave them out to save tokens
+        const forModel = JSON.stringify(result, (key, value) => (key === 'image' ? undefined : value));
+        messages.push({ role: 'tool', tool_call_id: call.id, content: forModel });
       }
     }
   } catch (err) {

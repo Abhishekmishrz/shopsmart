@@ -59,7 +59,7 @@ export const tools = [
 ];
 
 // Only the fields the AI and the chat cards need
-const shortProduct = (p) => ({ id: p._id.toString(), name: p.name, brand: p.brand, category: p.category, price: p.price, stock: p.stock });
+const shortProduct = (p) => ({ id: p._id.toString(), name: p.name, brand: p.brand, category: p.category, price: p.price, stock: p.stock, image: p.image });
 
 const searchProducts = async ({ query = '', category, minPrice, maxPrice }) => {
   const filter = { stock: { $gt: 0 } }; // only suggest things that can be bought
