@@ -10,7 +10,7 @@ An e-commerce store built with the MERN stack, with an AI shopping assistant tha
 
 **Shop**
 - Search, multi-category and price filters, sorting and pagination. Filters live in the URL, so refresh, the back button and shared links keep them.
-- Product pages with stock status and related products.
+- Product pages with photos, stock status and related products. Sample product photos are from [Unsplash](https://unsplash.com) and load from its CDN.
 - Cart stored in the browser (works for guests) that re-checks prices and stock against the API when opened.
 - Cash-on-delivery checkout, order tracking, and cancellation until an order ships.
 
@@ -23,9 +23,11 @@ An e-commerce store built with the MERN stack, with an AI shopping assistant tha
 - Products: search, category and stock filters, add / edit / delete.
 - Orders: counts per status, search by customer, city or order number, and status changes limited to allowed steps.
 
-| AI assistant | Admin panel |
+| Product page | AI assistant |
 |---|---|
-| ![AI assistant comparing two products](docs/screenshots/assistant.png) | ![Admin products table](docs/screenshots/admin.png) |
+| ![Product page](docs/screenshots/product.png) | ![AI assistant comparing two products](docs/screenshots/assistant.png) |
+
+![Admin products table](docs/screenshots/admin.png)
 
 ## Tech stack
 
@@ -142,7 +144,7 @@ backend/
   services/aiTools.js     tool definitions and the functions the assistant can call
   middleware/             JWT auth, admin check, central error handler
   routes/                 one router per resource
-  seed/                   sample products and seed script
+  seed/                   sample products (with photo links) and seed script
 frontend/
   src/api/axios.js        API client: adds the token, normalises errors
   src/context/            AuthContext, CartContext
