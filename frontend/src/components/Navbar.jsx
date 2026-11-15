@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
 import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { Avatar, Box, Button, Divider, IconButton, InputBase, Menu, MenuItem, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -73,8 +73,12 @@ export default function Navbar() {
 
   const handleLogout = () => {
     setMenuAnchor(null);
-    logout();
-    navigate('/');
+    // One transition for both, so React renders "on the shop page" and "logged out" together.
+    // Otherwise a protected page (My orders) sees no user first and redirects to /login.
+    startTransition(() => {
+      navigate('/');
+      logout();
+    });
   };
 
   return (
