@@ -16,13 +16,26 @@ const getClient = () => {
 const systemPrompt = (user) => `You are the shopping assistant for ShopSmart, an Indian online store.
 The customer's name is ${user.name}. Today is ${new Date().toDateString()}.
 
-Rules:
-- Use the tools for every question about products, prices, stock or orders. Never invent products, prices or order details.
-- Prices are in Indian rupees; write them like ₹1,899.
-- Keep replies short: 1 to 3 sentences. The app shows the products you found as cards, so don't list every detail.
-- If nothing matches, say so and suggest a nearby option (another price range or category).
+Your job: help the customer find, compare and choose products, suggest gifts, and check their orders.
+For any of these, call the tools first, then answer from the results.
+
+How to answer:
+- Never invent products, prices, stock or order details. Use only what the tools return.
+- To compare things (e.g. "earbuds and headphones"), search for each one, then compare price and features in a sentence or two.
+- The app shows every product and order you found as a card under your message. So do not list them: no numbered or bulleted lists, no markdown (no ** or #). Mention at most two products by name.
+- Write 1 to 3 short sentences in plain text. Prices in rupees, like ₹1,899.
+- If nothing matches, say so and suggest something close (another price or category).
 - Payment is cash on delivery and delivery is free.
-- Only help with shopping on ShopSmart. For anything else, politely say you can only help with shopping here.`;
+
+Only if the message has nothing to do with shopping (poems, homework, general knowledge, coding), reply that you can only help with shopping on ShopSmart.`;
+
+const safeParse = (json) => {
+  try {
+    return JSON.parse(json || '{}');
+  } catch {
+    return {};
+  }
+};
 
 // Keep only well-formed user/assistant text messages from the browser.
 // The client can't inject "system" or "tool" messages.
@@ -33,7 +46,8 @@ const cleanHistory = (messages) =>
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_MESSAGE_LENGTH) }));
 
 // POST /api/chat   Body: { messages: [{ role: 'user', content: 'running shoes under 2000' }, ...] }
-// Answer: { reply: 'text', products: [...] }
+// Answer: { reply, products, orders, toolCalls }. The chat shows products and orders as cards,
+// and toolCalls as small chips ("searchProducts · maxPrice: 2000") so you can see what the AI did.
 export const chat = async (req, res) => {
   if (!process.env.OPENAI_API_KEY) {
     res.status(503);
@@ -52,6 +66,9 @@ export const chat = async (req, res) => {
 
   const messages = [{ role: 'system', content: systemPrompt(req.user) }, ...history];
   const found = new Map(); // products from tool results, shown as cards (Map = no duplicates)
+  const orders = new Map();
+  const toolCalls = [];
+  const answer = (reply) => ({ reply, products: [...found.values()].slice(0, 5), orders: [...orders.values()], toolCalls });
 
   try {
     for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
@@ -67,7 +84,7 @@ export const chat = async (req, res) => {
 
       // No tool requested: this is the final answer
       if (!message.tool_calls?.length) {
-        return res.json({ reply: message.content, products: [...found.values()].slice(0, 5) });
+        return res.json(answer(message.content));
       }
 
       // The model asked for one or more tools. Keep its request in the conversation,
@@ -75,8 +92,10 @@ export const chat = async (req, res) => {
       messages.push(message);
       for (const call of message.tool_calls) {
         const result = await runTool(call.function.name, call.function.arguments, req.user);
+        toolCalls.push({ name: call.function.name, args: safeParse(call.function.arguments) });
         for (const p of result.products || []) found.set(p.id, p);
         if (result.product) found.set(result.product.id, result.product);
+        for (const o of result.orders || []) orders.set(o.orderNumber, o);
         messages.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) });
       }
     }
@@ -88,5 +107,5 @@ export const chat = async (req, res) => {
   }
 
   // Only reached if every round asked for tools (very unlikely)
-  res.json({ reply: 'Sorry, I could not work that out. Could you rephrase?', products: [...found.values()].slice(0, 5) });
+  res.json(answer('Sorry, I could not work that out. Could you rephrase?'));
 };
