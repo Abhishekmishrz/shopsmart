@@ -48,7 +48,24 @@ export default function AdminLayout() {
     <Box sx={{ minHeight: '100vh', display: 'flex', flexWrap: 'wrap' }}>
       <Box
         component="aside"
-        sx={{ flex: '1 1 240px', maxWidth: { md: 260 }, bgcolor: colors.ink, color: '#FFFFFF', px: 1.75, py: 2.5, display: 'flex', flexDirection: 'column', gap: 3 }}
+        sx={{
+          flex: '1 1 240px',
+          maxWidth: { md: 260 },
+          bgcolor: colors.ink,
+          color: '#FFFFFF',
+          px: 1.75,
+          py: 2.5,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          // Desktop: the sidebar is exactly one screen tall and stays put while the page
+          // scrolls, so "View store" and "Log out" are always visible at the bottom
+          position: { md: 'sticky' },
+          top: 0,
+          height: { md: '100vh' },
+          alignSelf: 'flex-start',
+          overflowY: { md: 'auto' },
+        }}
       >
         <Box component={Link} to="/admin" sx={{ display: 'flex', alignItems: 'center', gap: 1.25, textDecoration: 'none', color: '#FFFFFF', px: 1 }}>
           <Box sx={{ width: 30, height: 30, borderRadius: '7px', bgcolor: colors.accent, color: colors.ink, display: 'grid', placeItems: 'center', fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, fontSize: 17 }}>
