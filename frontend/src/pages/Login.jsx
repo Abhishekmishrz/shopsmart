@@ -22,8 +22,9 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
   const passwordRef = useRef(null);
 
-  // Already logged in (or just logged in): go back to where they came from
-  if (user) return <Navigate to={location.state?.from || '/'} replace />;
+  // Already logged in (or just logged in): back to where they came from,
+  // otherwise admins go to the admin panel and customers to the shop
+  if (user) return <Navigate to={location.state?.from || (user.role === 'admin' ? '/admin' : '/')} replace />;
 
   // One handler for both inputs: the input's name decides which field changes
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });

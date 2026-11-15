@@ -137,6 +137,11 @@ export default function Navbar() {
                   </Typography>
                 </Box>
                 <Divider />
+                {user.role === 'admin' && (
+                  <MenuItem component={Link} to="/admin" onClick={() => setMenuAnchor(null)}>
+                    Admin panel
+                  </MenuItem>
+                )}
                 <MenuItem component={Link} to="/orders" onClick={() => setMenuAnchor(null)}>
                   My orders
                 </MenuItem>

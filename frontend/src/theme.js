@@ -76,6 +76,9 @@ const theme = createTheme({
         root: {
           backgroundColor: colors.surface,
           '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.inputBorder },
+          // Text areas and inputs with an icon already have outer padding, so don't add it twice
+          '&.MuiInputBase-multiline .MuiInputBase-input': { padding: 0 },
+          '&.MuiInputBase-adornedStart .MuiInputBase-input': { paddingLeft: 0 },
         },
         input: { padding: '13px 14px', fontSize: 15 },
       },
