@@ -102,9 +102,12 @@ function ProductDetails({ id }) {
           label={false}
           sx={{ flex: '1 1 420px', minWidth: 0, aspectRatio: '1 / 1', borderRadius: 3, justifyContent: 'flex-end', p: 2.5 }}
         >
-          <Box component="span" sx={{ fontFamily: monoFont, fontSize: 12, letterSpacing: '0.08em', color: '#3D3D45' }}>
-            PRODUCT IMAGE · {product.category.toUpperCase()}
-          </Box>
+          {/* Placeholder text only when the product has no photo */}
+          {!product.image && (
+            <Box component="span" sx={{ fontFamily: monoFont, fontSize: 12, letterSpacing: '0.08em', color: '#3D3D45' }}>
+              PRODUCT IMAGE · {product.category.toUpperCase()}
+            </Box>
+          )}
         </ProductImage>
 
         <Box sx={{ flex: '1 1 420px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2.5 }}>

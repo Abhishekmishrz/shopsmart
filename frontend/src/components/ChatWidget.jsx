@@ -34,7 +34,7 @@ function ProductRow({ product, onNavigate }) {
   const { addItem, items } = useCart();
   const inCart = items.some((item) => item._id === product.id);
   // The API sends "id"; the cart and the rest of the app use "_id"
-  const asCartProduct = { _id: product.id, name: product.name, brand: product.brand, category: product.category, price: product.price, stock: product.stock };
+  const asCartProduct = { _id: product.id, name: product.name, brand: product.brand, category: product.category, price: product.price, stock: product.stock, image: product.image };
 
   return (
     <Box sx={cardSx}>

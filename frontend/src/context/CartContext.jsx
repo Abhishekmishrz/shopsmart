@@ -15,7 +15,7 @@ const loadCart = () => {
 const clampQty = (qty, stock) => Math.max(1, Math.min(qty, stock));
 
 // The cart lives in the browser (no login needed to fill it).
-// Each item: { _id, name, brand, category, price, stock, qty }
+// Each item: { _id, name, brand, category, price, stock, image, qty }
 export function CartProvider({ children }) {
   const [items, setItems] = useState(loadCart);
 
@@ -33,8 +33,8 @@ export function CartProvider({ children }) {
           item._id === product._id ? { ...item, qty: clampQty(item.qty + qty, product.stock) } : item
         );
       }
-      const { _id, name, brand, category, price, stock } = product;
-      return [...current, { _id, name, brand, category, price, stock, qty: clampQty(qty, stock) }];
+      const { _id, name, brand, category, price, stock, image } = product;
+      return [...current, { _id, name, brand, category, price, stock, image, qty: clampQty(qty, stock) }];
     });
   };
 
@@ -51,7 +51,7 @@ export function CartProvider({ children }) {
       current.flatMap((item) => {
         const fresh = freshProducts.find((p) => p._id === item._id);
         if (!fresh || fresh.stock === 0) return []; // deleted or sold out: drop it
-        return [{ ...item, name: fresh.name, price: fresh.price, stock: fresh.stock, qty: clampQty(item.qty, fresh.stock) }];
+        return [{ ...item, name: fresh.name, price: fresh.price, stock: fresh.stock, image: fresh.image, qty: clampQty(item.qty, fresh.stock) }];
       })
     );
 
