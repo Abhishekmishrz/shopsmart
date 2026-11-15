@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
+import Notice from './components/Notice';
 import ProtectedRoute from './components/ProtectedRoute';
 import ShopLayout from './components/ShopLayout';
 import Cart from './pages/Cart';
@@ -27,42 +28,47 @@ const pageLoader = (
 // URL → page
 export default function App() {
   return (
-    <Routes>
-      {/* Pages with the navbar */}
-      <Route element={<ShopLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
+    <>
+      <Routes>
+        {/* Pages with the navbar */}
+        <Route element={<ShopLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
 
-        {/* Need a login */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/orders" element={<MyOrders />} />
-          <Route path="/orders/:id/success" element={<OrderSuccess />} />
+          {/* Need a login */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<MyOrders />} />
+            <Route path="/orders/:id/success" element={<OrderSuccess />} />
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Route>
+        {/* Full-screen pages without the navbar */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* Full-screen pages without the navbar */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      {/* Admin: own layout with a sidebar, admins only */}
-      <Route element={<ProtectedRoute adminOnly />}>
-        <Route
-          path="/admin"
-          element={
-            <Suspense fallback={pageLoader}>
-              <AdminLayout />
-            </Suspense>
-          }
-        >
-          <Route index element={<Navigate to="products" replace />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="orders" element={<AdminOrders />} />
+        {/* Admin: own layout with a sidebar, admins only */}
+        <Route element={<ProtectedRoute adminOnly />}>
+          <Route
+            path="/admin"
+            element={
+              <Suspense fallback={pageLoader}>
+                <AdminLayout />
+              </Suspense>
+            }
+          >
+            <Route index element={<Navigate to="products" replace />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+
+      {/* Messages like "You've been logged out", shown on top of whichever page is open */}
+      <Notice />
+    </>
   );
 }

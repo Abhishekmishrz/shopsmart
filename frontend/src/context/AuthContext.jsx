@@ -8,6 +8,9 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   // True while we check a saved token on page load, so we don't flash "logged out"
   const [loading, setLoading] = useState(Boolean(localStorage.getItem('token')));
+  // A one-time message for the user, e.g. after logging out. `open` is separate from the text
+  // so the text stays visible while the message fades away.
+  const [notice, setNotice] = useState({ open: false, message: '' });
 
   // On page load: if a token was saved, ask the backend who it belongs to
   useEffect(() => {
@@ -43,13 +46,17 @@ export function AuthProvider({ children }) {
     return saveSession(data);
   };
 
+  // Only for the Log out button. An expired token logs out quietly through 'auth:logout' above.
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setNotice({ open: true, message: "You've been logged out" });
   };
 
+  const closeNotice = () => setNotice((current) => ({ ...current, open: false }));
+
   return (
-    <AuthContext value={{ user, loading, login, register, logout }}>
+    <AuthContext value={{ user, loading, login, register, logout, notice, closeNotice }}>
       {children}
     </AuthContext>
   );
