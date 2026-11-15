@@ -18,6 +18,12 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Every API request needs the database: wait for the (shared) connection first
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -27,9 +33,14 @@ app.use('/api/orders', orderRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5050;
+// On our machine: connect, then start a normal server.
+// On Vercel (it sets VERCEL=1): there is no long-running server. Vercel imports
+// this file and calls the exported app for each request.
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5050;
+  connectDB()
+    .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
+    .catch(() => process.exit(1)); // no database = nothing works, so stop
+}
 
-// Connect to the database first, then start accepting requests
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+export default app;
