@@ -1,4 +1,4 @@
-import Product from '../models/Product.js';
+import Product, { CATEGORIES } from '../models/Product.js';
 
 // Sort options the client may ask for. Anything else falls back to newest.
 const SORTS = {
@@ -11,9 +11,9 @@ const SORTS = {
 // Turns user text into a safe regex: "shoes (red)" must not break the pattern
 const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// GET /api/products?search=shoe&category=Footwear&minPrice=500&maxPrice=2000&sort=price_asc&page=1&limit=12
+// GET /api/products?search=shoe&category=Footwear,Clothing&minPrice=500&maxPrice=2000&inStock=true&sort=price_asc&page=1&limit=12
 export const getProducts = async (req, res) => {
-  const { search, category, minPrice, maxPrice, sort } = req.query;
+  const { search, category, minPrice, maxPrice, inStock, sort } = req.query;
   const filter = {};
 
   // Search name, brand and description, ignoring upper/lower case
@@ -22,9 +22,12 @@ export const getProducts = async (req, res) => {
     filter.$or = [{ name: pattern }, { brand: pattern }, { description: pattern }];
   }
 
+  // One or more categories, comma separated. Unknown names are dropped.
   if (typeof category === 'string' && category) {
-    filter.category = category;
+    filter.category = { $in: category.split(',').filter((name) => CATEGORIES.includes(name)) };
   }
+
+  if (inStock === 'true') filter.stock = { $gt: 0 };
 
   // Build { price: { $gte: 500, $lte: 2000 } } from whichever limits were sent
   const min = Number(minPrice);
@@ -46,6 +49,19 @@ export const getProducts = async (req, res) => {
   ]);
 
   res.json({ products, page, pages: Math.ceil(total / limit), total });
+};
+
+// GET /api/products/categories → { categories: [{ name: 'Footwear', count: 6 }, ...] }
+export const getCategories = async (req, res) => {
+  // Like SQL: SELECT category, COUNT(*) FROM products GROUP BY category
+  const counts = await Product.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }]);
+
+  // Keep a fixed order, and show 0 for categories with no products
+  const categories = CATEGORIES.map((name) => ({
+    name,
+    count: counts.find((c) => c._id === name)?.count || 0,
+  }));
+  res.json({ categories });
 };
 
 // GET /api/products/:id

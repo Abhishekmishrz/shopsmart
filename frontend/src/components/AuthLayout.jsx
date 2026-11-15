@@ -6,7 +6,7 @@ const year = new Date().getFullYear();
 
 const points = [
   'Search in plain words with the AI assistant',
-  'Cash on delivery, free delivery above ₹999',
+  'Cash on delivery and free delivery on every order',
   'Track every order from placed to delivered',
 ];
 

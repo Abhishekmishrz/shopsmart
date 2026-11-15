@@ -41,7 +41,11 @@ const orderSchema = new mongoose.Schema(
     },
     shippingAddress: {
       fullName: { type: String, required: [true, 'Full name is required'] },
-      phone: { type: String, required: [true, 'Phone is required'] },
+      phone: {
+        type: String,
+        required: [true, 'Phone is required'],
+        match: [/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number'],
+      },
       address: { type: String, required: [true, 'Address is required'] },
       city: { type: String, required: [true, 'City is required'] },
       state: { type: String, required: [true, 'State is required'] },

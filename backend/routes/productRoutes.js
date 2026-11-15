@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getProducts,
+  getCategories,
   getProductById,
   createProduct,
   updateProduct,
@@ -12,6 +13,7 @@ const router = Router();
 
 // Anyone can browse products
 router.get('/', getProducts);
+router.get('/categories', getCategories); // before '/:id', or "categories" would be read as an id
 router.get('/:id', getProductById);
 
 // Only admins can change the catalogue

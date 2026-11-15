@@ -80,6 +80,18 @@ const theme = createTheme({
         input: { padding: '13px 14px', fontSize: 15 },
       },
     },
+    // Current page in black, like the mockup
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          height: 40,
+          minWidth: 40,
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+          '&.Mui-selected, &.Mui-selected:hover': { backgroundColor: colors.ink, color: '#FFFFFF', borderColor: colors.ink },
+        },
+      },
+    },
     MuiAlert: {
       styleOverrides: { root: { borderRadius: 8 } },
     },
